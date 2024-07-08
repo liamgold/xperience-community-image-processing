@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34408.163
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XperienceCommunity.ImageProcessing", "src\XperienceCommunity.ImageProcessing.csproj", "{FE83F2DF-A443-4489-A176-389BE105079D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{29009A73-CCE4-4D28-8726-285018CEED45}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{1F25E8D2-664B-41B3-ABD9-B98A93161B30}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{161C73A6-5DAE-4899-94AC-3483D69566C6}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{26EDA3E6-9221-422A-BE92-A85A55D691EB}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE83F2DF-A443-4489-A176-389BE105079D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE83F2DF-A443-4489-A176-389BE105079D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE83F2DF-A443-4489-A176-389BE105079D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE83F2DF-A443-4489-A176-389BE105079D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FE83F2DF-A443-4489-A176-389BE105079D} = {29009A73-CCE4-4D28-8726-285018CEED45}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {905C7344-AC3B-41B6-8C34-07E1AD156473}
+	EndGlobalSection
+EndGlobal
