@@ -6,6 +6,7 @@ Xperience by Kentico comes with image processing abilities for the media library
 
 Image processing capabilities are on the [roadmap](https://roadmap.kentico.com/c/227-media-asset-transformations) for the Content Hub, but in the meantime, this package provides a way to processing Content Hub assets in the same way as media library images, through the use of SkiaSharp.
 
+NOTE: This package **will** eventually be deprecated once the Content Hub has image processing capabilities.
 
 ## Library Version Matrix
 
@@ -41,7 +42,8 @@ dotnet add package XperienceCommunity.ImageProcessing
 
     app.UseXperienceCommunityImageProcessing();
    ```
-                          
+
+                          
 1. You should be able to use the `width`, `height`, and `maxSideSize` query parameters on your Content Hub asset URLs to resize the image. Examples:
 
     1. Resize the image to a width of 100px:
