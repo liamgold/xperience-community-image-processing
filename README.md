@@ -1,4 +1,4 @@
-﻿a # Xperience Community: Image Processing
+﻿# Xperience Community: Image Processing
 
 ## Description
 
