@@ -2,11 +2,7 @@
 
 ## Description
 
-Xperience by Kentico comes with image processing abilities for the media library [Kentico.Xperience.ImageProcessing](https://www.nuget.org/packages/Kentico.Xperience.ImageProcessing) but lacks the ability to process images stored as assets in the Content Hub.
-
-Image processing capabilities are on the [roadmap](https://roadmap.kentico.com/c/227-media-asset-transformations) for the Content Hub, but in the meantime, this package provides a way to processing Content Hub assets in the same way as media library images, through the use of SkiaSharp.
-
-NOTE: This package **will** eventually be deprecated once the Content Hub has image processing capabilities.
+This package provides a way to resize images and convert them to `webp`, `jpg`, and `png` formats. It supports images from *Media libraries* and Content hub items stored as *Content item assets*.
 
 ## Library Version Matrix
 
@@ -31,6 +27,21 @@ dotnet add package XperienceCommunity.ImageProcessing
 
 1. Install NuGet package above.
 
+1. Add the following configuration to your `appsettings.json`:
+
+   ```json
+    {
+      "ImageProcessing": {
+        "ProcessMediaLibrary": true,
+        "ProcessContentItemAssets": true
+      }
+    }
+   ```
+   
+    - `ProcessMediaLibrary`: Set to `true` to enable image processing for Media library images. Defaults to `true`.
+    - `ProcessContentItemAssets`: Set to `true` to enable image processing for Content Hub assets. Defaults to `true`.
+
+    
 1. Register the Image Processing middleware using `app.UseXperienceCommunityImageProcessing()`:
 
    ```csharp
@@ -39,25 +50,34 @@ dotnet add package XperienceCommunity.ImageProcessing
     app.UseKentico();
 
     // ...
-
+   
+    builder.Services.Configure<ImageProcessingOptions>(builder.Configuration.GetSection("ImageProcessing"));
+   
     app.UseXperienceCommunityImageProcessing();
    ```
 
                           
-1. You should be able to use the `width`, `height`, and `maxSideSize` query parameters on your Content Hub asset URLs to resize the image. Examples:
+1. You should be able to use the `width`, `height`, and `maxSideSize` query parameters on your image URLs to resize the image. Examples:
 
-    1. Resize the image to a width of 100px:
+    1. Resize the Media library image to a width of 100px:
        ```
-       https://yourdomain.com/your-asset-url?width=100
+       https://yourdomain.com/getmedia/rest-of-your-asset-url?width=100
        ```
-    1. Resize the image to a height of 100px:
+    1. Resize the Content item asset image to a height of 100px:
        ```
-       https://yourdomain.com/your-asset-url?height=100
+       https://yourdomain.com/getContentAsset/rest-of-your-asset-url?height=100
        ```
-    1. Resize the image to a maximum side size of 100px:
+       
+1. You can also use the `format` query parameter to convert the image to a different format. Allowed values are: `webp`, `jpg` and `png`. Example:
+
+    1. Convert the Media library image to `webp`:
        ```
-       https://yourdomain.com/your-asset-url?maxSideSize=100
+       https://yourdomain.com/getmedia/rest-of-your-asset-url?format=webp
        ```
+   1. Convert the Content item asset image to `png`:
+      ```
+      https://yourdomain.com/getContentAsset/rest-of-your-asset-url?format=png
+      ```
 
 
 ## Contributing

@@ -396,3 +396,23 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Exclude the entire .idea folder for JetBrains IDEs
+.idea/
+
+# Include specific project configuration files
+!.idea/misc.xml
+!.idea/modules.xml
+!.idea/vcs.xml
+!.idea/runConfigurations/
+!.idea/codeStyles/
+!.idea/inspectionProfiles/
+!.idea/dictionaries/
+!.idea/libraries/
+
+# Exclude user-specific files
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries/
+.idea/shelf/
