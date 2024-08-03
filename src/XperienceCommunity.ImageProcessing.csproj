@@ -11,15 +11,14 @@
 	<PropertyGroup>
 		<Title>Xperience by Kentico Image Processing Management</Title>
 		<PackageId>XperienceCommunity.ImageProcessing</PackageId>
-		<Version>1.0.0</Version>
+		<Version>1.1.0</Version>
 		<Authors>Liam Goldfinch</Authors>
 		<Company>Liam Goldfinch</Company>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>kentico xperience mvc core image processing</PackageTags>
 		<Description>
-			Xperience by Kentico comes with image processing abilities for the media library (Kentico.Xperience.ImageProcessing) but lacks the ability to process images stored as assets in the Content Hub.
-			Image processing capabilities are on the roadmap for the Content Hub, but in the meantime, this package provides a way to processing Content Hub assets in the same way as media library images, through the use of SkiaSharp.
+			Xperience by Kentico comes with image processing abilities for the media library (Kentico.Xperience.ImageProcessing) but lacks the ability to process images stored as assets in the Content Hub. Image processing capabilities are on the roadmap for the Content Hub, but in the meantime, this package provides a way to processing Content Hub assets in the same way as media library images, through the use of SkiaSharp.
 		</Description>
 		<RepositoryUrl>https://github.com/liamgold/xperience-community-image-processing</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
