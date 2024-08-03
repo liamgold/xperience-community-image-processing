@@ -45,14 +45,18 @@ dotnet add package XperienceCommunity.ImageProcessing
 1. Register the Image Processing middleware using `app.UseXperienceCommunityImageProcessing()`:
 
    ```csharp
+    var builder = WebApplication.CreateBuilder(args);
+
+    // ...
+
+    builder.Services.Configure<ImageProcessingOptions>(builder.Configuration.GetSection("ImageProcessing"));
+
     var app = builder.Build();
 
     app.UseKentico();
 
     // ...
-   
-    builder.Services.Configure<ImageProcessingOptions>(builder.Configuration.GetSection("ImageProcessing"));
-   
+       
     app.UseXperienceCommunityImageProcessing();
    ```
 
