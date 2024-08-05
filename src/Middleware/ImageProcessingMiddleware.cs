@@ -121,7 +121,7 @@ public class ImageProcessingMiddleware(RequestDelegate next, IEventLogService ev
             return imageBytes;
         }
 
-        if (width <= 0 && height <= 0 && maxSideSize <= 0)
+        if (width <= 0 && height <= 0 && maxSideSize <= 0 && format == contentType)
         {
             return imageBytes;
         }
@@ -138,8 +138,7 @@ public class ImageProcessingMiddleware(RequestDelegate next, IEventLogService ev
 
             var resizedBitmap = originalBitmap;
 
-            // Resize the image if it is a Content item asset only as Media library images are already resized by XbyK
-            if (IsPathContentItemAsset(path))
+            if (width > 0 || height > 0 || maxSideSize > 0)
             {
                 var newDims = ImageHelper.EnsureImageDimensions(width, height, maxSideSize, originalBitmap.Width, originalBitmap.Height);
                 resizedBitmap = originalBitmap.Resize(new SKImageInfo(newDims[0], newDims[1]), SKFilterQuality.High);
