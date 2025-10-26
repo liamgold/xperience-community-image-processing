@@ -1,4 +1,6 @@
-﻿using CMS.Core;
+﻿using CMS.ContentEngine;
+using CMS.Core;
+using CMS.MediaLibrary;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
@@ -382,8 +384,8 @@ public class ImageProcessingMiddleware(RequestDelegate next, IEventLogService ev
         return Array.Exists(_supportedContentTypes, ct => ct.Equals(contentType, StringComparison.OrdinalIgnoreCase));
     }
 
-    private static bool IsPathMediaLibrary(PathString path) => path.StartsWithSegments("/getmedia");
-    private static bool IsPathContentItemAsset(PathString path) => path.StartsWithSegments("/getContentAsset");
+    private static bool IsPathMediaLibrary(PathString path) => path.StartsWithSegments($"/{MediaLibraryConstants.MEDIA_FILE_URL_PATH_PREFIX}");
+    private static bool IsPathContentItemAsset(PathString path) => path.StartsWithSegments($"/{ContentItemAssetConstants.CONTENT_ASSET_URL_PATH_PREFIX}");
 
     private static bool IsPathToBeProcessed(PathString path, ImageProcessingOptions options)
     {
