@@ -91,6 +91,40 @@ dotnet add package XperienceCommunity.ImageProcessing
       https://yourdomain.com/getContentAsset/rest-of-your-asset-url?format=png
       ```
 
+1. Use the `fit` parameter to control how images are resized. Available modes:
+
+    - **`contain`** (default): Fit image inside dimensions, maintaining aspect ratio
+      ```
+      https://yourdomain.com/getmedia/rest-of-your-asset-url?width=500&height=500&fit=contain
+      ```
+
+    - **`cover`**: Fill dimensions exactly, cropping excess while maintaining aspect ratio
+      ```
+      https://yourdomain.com/getmedia/rest-of-your-asset-url?width=500&height=500&fit=cover
+      ```
+
+    - **`fill`**: Stretch image to exact dimensions, ignoring aspect ratio
+      ```
+      https://yourdomain.com/getmedia/rest-of-your-asset-url?width=500&height=500&fit=fill
+      ```
+
+1. Use the `crop` parameter with `fit=cover` to control crop positioning:
+
+    - **`center`** (default): Crop from center
+      ```
+      https://yourdomain.com/getmedia/rest-of-your-asset-url?width=500&height=500&fit=cover&crop=center
+      ```
+
+    - **`north`**, **`south`**, **`east`**, **`west`**: Crop from edges
+      ```
+      https://yourdomain.com/getmedia/rest-of-your-asset-url?width=500&height=500&fit=cover&crop=north
+      ```
+
+    - **`northeast`**, **`northwest`**, **`southeast`**, **`southwest`**: Crop from corners
+      ```
+      https://yourdomain.com/getmedia/rest-of-your-asset-url?width=500&height=500&fit=cover&crop=southeast
+      ```
+
 ## Production Recommendations
 
 ### Use a CDN

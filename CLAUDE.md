@@ -22,8 +22,10 @@ This project provides an ASP.NET Core middleware that intercepts image requests 
    - Intercepts requests to `/getmedia/*` (Media library) and `/getContentAsset/*` (Content hub assets)
 
 2. **Image Processing**
-   - Query parameters: `width`, `height`, `maxSideSize`, `format`
+   - Query parameters: `width`, `height`, `maxSideSize`, `format`, `fit`, `crop`
    - Supports format conversion: `webp`, `jpg`, `png`
+   - Supports fit modes: `contain` (default), `cover`, `fill`
+   - Supports crop positioning: `center` (default), `north`, `south`, `east`, `west`, `northeast`, `northwest`, `southeast`, `southwest`
    - Uses SkiaSharp for high-quality image resizing
    - ETags for client-side caching
 
@@ -113,11 +115,26 @@ This project uses **Central Package Management** via `Directory.Packages.props`:
 - Automatic parameter validation: dimensions exceeding configured maximums are clamped
 - Proper resource disposal with try-finally pattern for bitmap memory management
 
+### Fit Modes
+- **contain** (default): Fit image inside dimensions, maintaining aspect ratio (letterbox if needed)
+- **cover**: Fill dimensions exactly, cropping excess while maintaining aspect ratio
+- **fill**: Stretch image to exact dimensions, ignoring aspect ratio
+
+### Crop Positioning
+When using `fit=cover`, the `crop` parameter controls where to crop from:
+- **center** (default): Crop from center
+- **north**: Crop from top center
+- **south**: Crop from bottom center
+- **east**: Crop from middle right
+- **west**: Crop from middle left
+- **northeast**, **northwest**, **southeast**, **southwest**: Corner positions
+
 ### Caching Strategy
-- ETags generated from MD5 hash of: original image bytes + width + height + maxSideSize + format
+- ETags generated from MD5 hash of: original image bytes + width + height + maxSideSize + format + fitMode + cropPosition
 - Clients can use If-None-Match header for cache validation
 - Cache-Control: public, max-age=31536000 (1 year)
 - Content-Disposition: inline with proper filename and extension
+- Different fit/crop combinations generate unique ETags for proper cache differentiation
 
 ## CI/CD
 
