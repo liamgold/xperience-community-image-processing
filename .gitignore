@@ -416,3 +416,8 @@ FodyWeavers.xsd
 .idea/usage.statistics.xml
 .idea/dictionaries/
 .idea/shelf/
+
+# Claude Code
+.claude/*
+!.claude/commands/
+!.claude/agents/
