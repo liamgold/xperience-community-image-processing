@@ -4,6 +4,23 @@
 
 This package provides a way to resize images and convert them to `webp`, `jpg`, and `png` formats. It supports images from *Media libraries* and Content hub items stored as *Content item assets*.
 
+## ⚠️ Consider Kentico's Native Image Variants
+
+**Before using this package**, consider [Kentico's native Image Variants feature](https://docs.kentico.com/documentation/business-users/content-hub/content-item-assets#image-variants) introduced in recent versions. The native solution:
+- ✅ Officially supported by Kentico
+- ✅ Integrated into the Content Hub UI
+- ✅ Pre-generated variants for better performance
+- ✅ No additional dependencies
+
+**This package is still useful if you need:**
+- On-the-fly image processing without pre-generation
+- Media library image support (native variants are Content Hub only)
+- Dynamic query parameter-based transformations
+- Fit modes (`cover`, `contain`, `fill`) and crop positioning
+- Legacy project compatibility
+
+**Future deprecation:** As Kentico's native solution matures and adds more features, this package may be deprecated. For new projects, we recommend starting with the native Image Variants feature.
+
 ## Library Version Matrix
 
 | Xperience Version | Library Version |

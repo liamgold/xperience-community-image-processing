@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **Xperience by Kentico** middleware library that provides image processing capabilities for the Xperience by Kentico platform. It's packaged as a NuGet package for distribution.
 
+**Note:** Kentico now offers native Image Variants (https://docs.kentico.com/documentation/business-users/content-hub/content-item-assets#image-variants) for Content Hub assets. This package remains useful for Media library support, on-the-fly processing, and dynamic transformations. Future deprecation is planned as Kentico's native solution matures.
+
 **Key Technology Stack:**
 - Backend: .NET 8.0, ASP.NET Core, Xperience by Kentico 30.11.1+
 - Image Processing: SkiaSharp 3.119.1
