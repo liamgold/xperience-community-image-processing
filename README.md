@@ -33,13 +33,21 @@ dotnet add package XperienceCommunity.ImageProcessing
     {
       "ImageProcessing": {
         "ProcessMediaLibrary": true,
-        "ProcessContentItemAssets": true
+        "ProcessContentItemAssets": true,
+        "MaxWidth": 5000,
+        "MaxHeight": 5000,
+        "MaxSideSize": 5000,
+        "Quality": 80
       }
     }
    ```
-   
+
     - `ProcessMediaLibrary`: Set to `true` to enable image processing for Media library images. Defaults to `true`.
     - `ProcessContentItemAssets`: Set to `true` to enable image processing for Content Hub assets. Defaults to `true`.
+    - `MaxWidth`: Maximum allowed width in pixels. Requests exceeding this will be capped. Defaults to `5000`.
+    - `MaxHeight`: Maximum allowed height in pixels. Requests exceeding this will be capped. Defaults to `5000`.
+    - `MaxSideSize`: Maximum allowed value for the `maxSideSize` parameter. Requests exceeding this will be capped. Defaults to `5000`.
+    - `Quality`: JPEG/WebP encoding quality (1-100). Higher values produce better quality but larger file sizes. Defaults to `80`.
 
     
 1. Register the Image Processing middleware using `app.UseXperienceCommunityImageProcessing()`:
@@ -98,7 +106,14 @@ Without a CDN, every unique image variant will be processed on your server, whic
 
 ### Parameter Validation
 
-Consider validating `width`, `height`, and `maxSideSize` parameters in your application to prevent abuse. The middleware does not enforce maximum dimensions, so users could potentially request very large images.
+The middleware automatically validates and clamps dimension parameters:
+
+- `width`, `height`, and `maxSideSize` values exceeding the configured maximums are automatically capped
+- Default maximum values are 5000 pixels for all dimensions
+- Adjust `MaxWidth`, `MaxHeight`, and `MaxSideSize` in configuration based on your needs
+- Quality values outside the 1-100 range are automatically clamped
+
+This prevents abuse while ensuring requests always succeed with reasonable values.
 
 ## Contributing
 

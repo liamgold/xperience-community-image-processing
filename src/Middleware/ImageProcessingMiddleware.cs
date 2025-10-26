@@ -25,6 +25,26 @@ public class ImageProcessingMiddleware(RequestDelegate next, IEventLogService ev
         "image/webp"
     ];
 
+    /// <summary>
+    /// Validates and clamps dimension parameters to configured maximums
+    /// </summary>
+    private (int? width, int? height, int? maxSideSize) ValidateAndClampDimensions(int? width, int? height, int? maxSideSize)
+    {
+        int? validatedWidth = width.HasValue && width.Value > 0
+            ? Math.Min(width.Value, _options.MaxWidth)
+            : null;
+
+        int? validatedHeight = height.HasValue && height.Value > 0
+            ? Math.Min(height.Value, _options.MaxHeight)
+            : null;
+
+        int? validatedMaxSideSize = maxSideSize.HasValue && maxSideSize.Value > 0
+            ? Math.Min(maxSideSize.Value, _options.MaxSideSize)
+            : null;
+
+        return (validatedWidth, validatedHeight, validatedMaxSideSize);
+    }
+
     public async Task InvokeAsync(HttpContext context)
     {
         var originalResponseBodyStream = context.Response.Body;
@@ -62,6 +82,9 @@ public class ImageProcessingMiddleware(RequestDelegate next, IEventLogService ev
             {
                 maxSideSize = parsedMaxSideSize;
             }
+
+            // Validate and clamp dimensions to configured maximums
+            (width, height, maxSideSize) = ValidateAndClampDimensions(width, height, maxSideSize);
 
             if (context.Request.Query.ContainsKey("format"))
             {
@@ -136,23 +159,32 @@ public class ImageProcessingMiddleware(RequestDelegate next, IEventLogService ev
                 return imageBytes;
             }
 
-            var resizedBitmap = originalBitmap;
-
-            if (width > 0 || height > 0 || maxSideSize > 0)
+            SKBitmap? resizedBitmap = null;
+            try
             {
-                var newDims = ImageHelper.EnsureImageDimensions(width, height, maxSideSize, originalBitmap.Width, originalBitmap.Height);
-                resizedBitmap = originalBitmap.Resize(new SKImageInfo(newDims[0], newDims[1]), new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear));
-                if (resizedBitmap == null)
+                if (width > 0 || height > 0 || maxSideSize > 0)
                 {
-                    _eventLogService.LogWarning(nameof(ImageProcessingMiddleware), nameof(ProcessImageAsync), "Failed to resize image.");
-                    return imageBytes;
+                    var newDims = ImageHelper.EnsureImageDimensions(width, height, maxSideSize, originalBitmap.Width, originalBitmap.Height);
+                    resizedBitmap = originalBitmap.Resize(new SKImageInfo(newDims[0], newDims[1]), new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear));
+                    if (resizedBitmap == null)
+                    {
+                        _eventLogService.LogWarning(nameof(ImageProcessingMiddleware), nameof(ProcessImageAsync), "Failed to resize image.");
+                        return imageBytes;
+                    }
                 }
-            }
 
-            using var outputStream = new MemoryStream();
-            var imageFormat = GetImageFormat(format);
-            await Task.Run(() => resizedBitmap.Encode(imageFormat, 80).SaveTo(outputStream));
-            return outputStream.ToArray();
+                var bitmapToEncode = resizedBitmap ?? originalBitmap;
+                using var outputStream = new MemoryStream();
+                var imageFormat = GetImageFormat(format);
+                var quality = Math.Clamp(_options.Quality, 1, 100);
+                await Task.Run(() => bitmapToEncode.Encode(imageFormat, quality).SaveTo(outputStream));
+                return outputStream.ToArray();
+            }
+            finally
+            {
+                // Dispose resized bitmap if it was created (different from original)
+                resizedBitmap?.Dispose();
+            }
         }
         catch (Exception ex)
         {
@@ -183,9 +215,9 @@ public class ImageProcessingMiddleware(RequestDelegate next, IEventLogService ev
 
     private static bool IsPathToBeProcessed(PathString path, ImageProcessingOptions options)
     {
-        // Set default values
-        var processMediaLibrary = options.ProcessMediaLibrary ??= true;
-        var processContentItemAssets = options.ProcessContentItemAssets ??= true;
+        // Use default values if not set
+        var processMediaLibrary = options.ProcessMediaLibrary ?? true;
+        var processContentItemAssets = options.ProcessContentItemAssets ?? true;
 
         if (processMediaLibrary && IsPathMediaLibrary(path))
         {
@@ -234,8 +266,35 @@ public class ImageProcessingMiddleware(RequestDelegate next, IEventLogService ev
 
 public class ImageProcessingOptions
 {
+    /// <summary>
+    /// Enable or disable processing for Media library images. Default: true
+    /// </summary>
     public bool? ProcessMediaLibrary { get; set; } = true;
+
+    /// <summary>
+    /// Enable or disable processing for Content hub assets. Default: true
+    /// </summary>
     public bool? ProcessContentItemAssets { get; set; } = true;
+
+    /// <summary>
+    /// Maximum allowed width in pixels. Requests exceeding this will be capped. Default: 5000
+    /// </summary>
+    public int MaxWidth { get; set; } = 5000;
+
+    /// <summary>
+    /// Maximum allowed height in pixels. Requests exceeding this will be capped. Default: 5000
+    /// </summary>
+    public int MaxHeight { get; set; } = 5000;
+
+    /// <summary>
+    /// Maximum allowed value for maxSideSize parameter. Requests exceeding this will be capped. Default: 5000
+    /// </summary>
+    public int MaxSideSize { get; set; } = 5000;
+
+    /// <summary>
+    /// JPEG/WebP quality (1-100). Higher is better quality but larger file size. Default: 80
+    /// </summary>
+    public int Quality { get; set; } = 80;
 }
 
 public static class ImageProcessingMiddlewareExtensions

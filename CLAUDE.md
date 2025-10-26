@@ -30,6 +30,10 @@ This project provides an ASP.NET Core middleware that intercepts image requests 
 3. **Configuration Options** (`ImageProcessingOptions`)
    - `ProcessMediaLibrary`: Enable/disable processing for Media library images (default: true)
    - `ProcessContentItemAssets`: Enable/disable processing for Content hub assets (default: true)
+   - `MaxWidth`: Maximum allowed width in pixels, requests exceeding this are capped (default: 5000)
+   - `MaxHeight`: Maximum allowed height in pixels, requests exceeding this are capped (default: 5000)
+   - `MaxSideSize`: Maximum allowed maxSideSize parameter, requests exceeding this are capped (default: 5000)
+   - `Quality`: JPEG/WebP encoding quality 1-100, higher is better quality but larger file size (default: 80)
 
 ### Configuration System
 
@@ -39,7 +43,11 @@ The middleware supports optional configuration via ASP.NET Core configuration:
 {
   "ImageProcessing": {
     "ProcessMediaLibrary": true,
-    "ProcessContentItemAssets": true
+    "ProcessContentItemAssets": true,
+    "MaxWidth": 5000,
+    "MaxHeight": 5000,
+    "MaxSideSize": 5000,
+    "Quality": 80
   }
 }
 ```
@@ -99,9 +107,11 @@ This project uses **Central Package Management** via `Directory.Packages.props`:
 ### Image Processing
 - Uses SkiaSharp for high-performance image manipulation
 - `SKSamplingOptions` with linear filtering for best resize quality
-- Quality setting: 80 for JPEG/WebP encoding
+- Configurable quality setting (default: 80) for JPEG/WebP encoding
 - Maintains aspect ratio when only width or height specified
 - `maxSideSize` parameter scales largest dimension to specified size
+- Automatic parameter validation: dimensions exceeding configured maximums are clamped
+- Proper resource disposal with try-finally pattern for bitmap memory management
 
 ### Caching Strategy
 - ETags generated from MD5 hash of: original image bytes + width + height + maxSideSize + format
@@ -129,4 +139,5 @@ The `examples/DancingGoat` directory contains a sample Xperience by Kentico webs
 2. **SkiaSharp native dependencies:** The package includes `SkiaSharp.NativeAssets.Linux.NoDependencies` for Linux deployments
 3. **Memory usage:** Large images are loaded into memory for processing - monitor memory usage in high-traffic scenarios
 4. **ETag caching:** ETags are based on original image content, so clearing CDN/browser cache may be needed when images are updated
-5. **Query parameter validation:** Invalid values for width/height/maxSideSize are silently ignored and the original image is returned
+5. **Parameter clamping:** Dimension values exceeding configured maximums (MaxWidth, MaxHeight, MaxSideSize) are automatically capped, not rejected
+6. **Quality clamping:** Quality values outside 1-100 range are clamped to valid range
