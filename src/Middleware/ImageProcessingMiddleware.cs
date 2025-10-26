@@ -1,5 +1,4 @@
 ﻿using CMS.Core;
-using CMS.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
