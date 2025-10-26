@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a **Xperience by Kentico** middleware library that provides image processing capabilities for the Xperience by Kentico platform. It's packaged as a NuGet package for distribution.
 
 **Key Technology Stack:**
-- Backend: .NET 8.0, ASP.NET Core, Xperience by Kentico 29.1.4+
+- Backend: .NET 8.0, ASP.NET Core, Xperience by Kentico 30.11.1+
 - Image Processing: SkiaSharp 3.119.1
 - Supported formats: WebP, JPEG, PNG
 
@@ -87,7 +87,7 @@ This project uses **Central Package Management** via `Directory.Packages.props`:
 - All NuGet package versions are centralized in `Directory.Packages.props`
 - Individual `.csproj` files reference packages WITHOUT version attributes
 - `packages.lock.json` is generated and committed for reproducible builds
-- Kentico packages are pinned to 29.1.4
+- Kentico packages are currently at 30.11.1
 
 **Important:** When updating Kentico packages, update all three together:
 - `Kentico.Xperience.webapp`

@@ -8,7 +8,8 @@ This package provides a way to resize images and convert them to `webp`, `jpg`, 
 
 | Xperience Version | Library Version |
 | ----------------- | --------------- |
-| >= 29.1.4         | 1.0.0           |
+| >= 30.11.1        | 2.0.0+          |
+| >= 29.1.4         | 1.x             |
 
 ## Dependencies
 

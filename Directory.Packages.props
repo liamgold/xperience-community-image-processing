@@ -1,15 +1,15 @@
 <Project>
-	<PropertyGroup>
-		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-		<CentralPackageVersionOverrideEnabled>false</CentralPackageVersionOverrideEnabled>
-		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-		<DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
-	</PropertyGroup>
-	<ItemGroup>
-		<PackageVersion Include="Kentico.Xperience.webapp" Version="29.1.4" />
-		<PackageVersion Include="Kentico.Xperience.azurestorage" Version="29.1.4" />
-		<PackageVersion Include="Kentico.Xperience.admin" Version="29.1.4" />
-		<PackageVersion Include="SkiaSharp" Version="3.119.1" />
-		<PackageVersion Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1" />
-	</ItemGroup>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageVersionOverrideEnabled>false</CentralPackageVersionOverrideEnabled>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Kentico.Xperience.webapp" Version="30.11.1" />
+    <PackageVersion Include="Kentico.Xperience.azurestorage" Version="30.11.1" />
+    <PackageVersion Include="Kentico.Xperience.admin" Version="30.11.1" />
+    <PackageVersion Include="SkiaSharp" Version="3.119.1" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1" />
+  </ItemGroup>
 </Project>
