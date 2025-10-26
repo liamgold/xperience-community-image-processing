@@ -141,7 +141,7 @@ public class ImageProcessingMiddleware(RequestDelegate next, IEventLogService ev
             if (width > 0 || height > 0 || maxSideSize > 0)
             {
                 var newDims = ImageHelper.EnsureImageDimensions(width, height, maxSideSize, originalBitmap.Width, originalBitmap.Height);
-                resizedBitmap = originalBitmap.Resize(new SKImageInfo(newDims[0], newDims[1]), SKFilterQuality.High);
+                resizedBitmap = originalBitmap.Resize(new SKImageInfo(newDims[0], newDims[1]), new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear));
                 if (resizedBitmap == null)
                 {
                     _eventLogService.LogWarning(nameof(ImageProcessingMiddleware), nameof(ProcessImageAsync), "Failed to resize image.");

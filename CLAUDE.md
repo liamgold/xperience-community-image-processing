@@ -8,7 +8,7 @@ This is a **Xperience by Kentico** middleware library that provides image proces
 
 **Key Technology Stack:**
 - Backend: .NET 8.0, ASP.NET Core, Xperience by Kentico 29.1.4+
-- Image Processing: SkiaSharp 2.88.8
+- Image Processing: SkiaSharp 3.119.1
 - Supported formats: WebP, JPEG, PNG
 
 ## Architecture
@@ -98,7 +98,7 @@ This project uses **Central Package Management** via `Directory.Packages.props`:
 
 ### Image Processing
 - Uses SkiaSharp for high-performance image manipulation
-- `SKFilterQuality.High` for best resize quality
+- `SKSamplingOptions` with linear filtering for best resize quality
 - Quality setting: 80 for JPEG/WebP encoding
 - Maintains aspect ratio when only width or height specified
 - `maxSideSize` parameter scales largest dimension to specified size
