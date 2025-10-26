@@ -3,79 +3,15 @@ using CMS.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.Options;
 using SkiaSharp;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Extensions.Options;
+using XperienceCommunity.ImageProcessing.Enums;
+using XperienceCommunity.ImageProcessing.Options;
 using Path = System.IO.Path;
 
 namespace XperienceCommunity.ImageProcessing;
-
-public enum FitMode
-{
-    /// <summary>
-    /// Fit image inside dimensions, maintaining aspect ratio (default, letterbox if needed)
-    /// </summary>
-    Contain,
-
-    /// <summary>
-    /// Fill dimensions exactly, cropping excess while maintaining aspect ratio
-    /// </summary>
-    Cover,
-
-    /// <summary>
-    /// Stretch image to exact dimensions, ignoring aspect ratio
-    /// </summary>
-    Fill
-}
-
-public enum CropPosition
-{
-    /// <summary>
-    /// Crop from center (default)
-    /// </summary>
-    Center,
-
-    /// <summary>
-    /// Crop from top center
-    /// </summary>
-    North,
-
-    /// <summary>
-    /// Crop from bottom center
-    /// </summary>
-    South,
-
-    /// <summary>
-    /// Crop from middle left
-    /// </summary>
-    West,
-
-    /// <summary>
-    /// Crop from middle right
-    /// </summary>
-    East,
-
-    /// <summary>
-    /// Crop from top left
-    /// </summary>
-    NorthWest,
-
-    /// <summary>
-    /// Crop from top right
-    /// </summary>
-    NorthEast,
-
-    /// <summary>
-    /// Crop from bottom left
-    /// </summary>
-    SouthWest,
-
-    /// <summary>
-    /// Crop from bottom right
-    /// </summary>
-    SouthEast
-}
 
 public class ImageProcessingMiddleware(RequestDelegate next, IEventLogService eventLogService, IOptions<ImageProcessingOptions>? options)
 {
@@ -501,39 +437,6 @@ public class ImageProcessingMiddleware(RequestDelegate next, IEventLogService ev
         await responseBodyStream.CopyToAsync(originalResponseBodyStream);
         context.Response.Body = originalResponseBodyStream;
     }
-}
-
-public class ImageProcessingOptions
-{
-    /// <summary>
-    /// Enable or disable processing for Media library images. Default: true
-    /// </summary>
-    public bool? ProcessMediaLibrary { get; set; } = true;
-
-    /// <summary>
-    /// Enable or disable processing for Content hub assets. Default: true
-    /// </summary>
-    public bool? ProcessContentItemAssets { get; set; } = true;
-
-    /// <summary>
-    /// Maximum allowed width in pixels. Requests exceeding this will be capped. Default: 5000
-    /// </summary>
-    public int MaxWidth { get; set; } = 5000;
-
-    /// <summary>
-    /// Maximum allowed height in pixels. Requests exceeding this will be capped. Default: 5000
-    /// </summary>
-    public int MaxHeight { get; set; } = 5000;
-
-    /// <summary>
-    /// Maximum allowed value for maxSideSize parameter. Requests exceeding this will be capped. Default: 5000
-    /// </summary>
-    public int MaxSideSize { get; set; } = 5000;
-
-    /// <summary>
-    /// JPEG/WebP quality (1-100). Higher is better quality but larger file size. Default: 80
-    /// </summary>
-    public int Quality { get; set; } = 80;
 }
 
 public static class ImageProcessingMiddlewareExtensions
