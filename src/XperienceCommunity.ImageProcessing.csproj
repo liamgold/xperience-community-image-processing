@@ -11,7 +11,7 @@
 	<PropertyGroup>
 		<Title>Xperience by Kentico Image Processing</Title>
 		<PackageId>XperienceCommunity.ImageProcessing</PackageId>
-		<Version>1.1.1</Version>
+		<Version>1.1.2</Version>
 		<Authors>Liam Goldfinch</Authors>
 		<Company>Liam Goldfinch</Company>
 		<PackageIcon>icon.png</PackageIcon>

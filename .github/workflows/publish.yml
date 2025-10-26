@@ -1,0 +1,39 @@
+name: Publish to NuGet
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build src/XperienceCommunity.ImageProcessing.csproj --configuration Release --no-restore
+
+    - name: Pack
+      run: dotnet pack src/XperienceCommunity.ImageProcessing.csproj --configuration Release --no-build --output nupkg
+
+    - name: NuGet login (OIDC)
+      uses: NuGet/login@v1
+      id: nuget_login
+      with:
+        user: liamgold
+
+    - name: Publish to NuGet using Trusted Publishing
+      run: dotnet nuget push nupkg/*.nupkg --api-key "${{ steps.nuget_login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
