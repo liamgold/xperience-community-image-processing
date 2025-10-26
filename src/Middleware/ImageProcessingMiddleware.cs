@@ -384,8 +384,8 @@ public class ImageProcessingMiddleware(RequestDelegate next, IEventLogService ev
         return Array.Exists(_supportedContentTypes, ct => ct.Equals(contentType, StringComparison.OrdinalIgnoreCase));
     }
 
-    private static bool IsPathMediaLibrary(PathString path) => path.StartsWithSegments($"/{MediaLibraryConstants.MEDIA_FILE_URL_PATH_PREFIX}");
-    private static bool IsPathContentItemAsset(PathString path) => path.StartsWithSegments($"/{ContentItemAssetConstants.CONTENT_ASSET_URL_PATH_PREFIX}");
+    private static bool IsPathMediaLibrary(PathString path) => path.StartsWithSegments("/" + MediaLibraryConstants.MEDIA_FILE_URL_PATH_PREFIX);
+    private static bool IsPathContentItemAsset(PathString path) => path.StartsWithSegments("/" + ContentItemAssetConstants.CONTENT_ASSET_URL_PATH_PREFIX);
 
     private static bool IsPathToBeProcessed(PathString path, ImageProcessingOptions options)
     {
