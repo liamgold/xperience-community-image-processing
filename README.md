@@ -83,6 +83,22 @@ dotnet add package XperienceCommunity.ImageProcessing
       https://yourdomain.com/getContentAsset/rest-of-your-asset-url?format=png
       ```
 
+## Production Recommendations
+
+### Use a CDN
+
+**Strongly recommended:** Place a CDN (like Cloudflare, Azure CDN, or CloudFront) in front of your website for production deployments.
+
+- The middleware generates ETags for efficient browser/CDN caching
+- First request processes the image, subsequent requests are served from CDN cache
+- Dramatically reduces server load and improves performance
+- Sets `Cache-Control: public, max-age=31536000` (1 year) for optimal caching
+
+Without a CDN, every unique image variant will be processed on your server, which can be memory and CPU intensive.
+
+### Parameter Validation
+
+Consider validating `width`, `height`, and `maxSideSize` parameters in your application to prevent abuse. The middleware does not enforce maximum dimensions, so users could potentially request very large images.
 
 ## Contributing
 
