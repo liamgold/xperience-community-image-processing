@@ -8,7 +8,8 @@ This package provides a way to resize images and convert them to `webp`, `jpg`, 
 
 | Xperience Version | Library Version |
 | ----------------- | --------------- |
-| >= 29.1.4         | 1.0.0           |
+| >= 30.11.1        | 2.0.0+          |
+| >= 29.1.4         | 1.x             |
 
 ## Dependencies
 
@@ -33,13 +34,21 @@ dotnet add package XperienceCommunity.ImageProcessing
     {
       "ImageProcessing": {
         "ProcessMediaLibrary": true,
-        "ProcessContentItemAssets": true
+        "ProcessContentItemAssets": true,
+        "MaxWidth": 5000,
+        "MaxHeight": 5000,
+        "MaxSideSize": 5000,
+        "Quality": 80
       }
     }
    ```
-   
+
     - `ProcessMediaLibrary`: Set to `true` to enable image processing for Media library images. Defaults to `true`.
     - `ProcessContentItemAssets`: Set to `true` to enable image processing for Content Hub assets. Defaults to `true`.
+    - `MaxWidth`: Maximum allowed width in pixels. Requests exceeding this will be capped. Defaults to `5000`.
+    - `MaxHeight`: Maximum allowed height in pixels. Requests exceeding this will be capped. Defaults to `5000`.
+    - `MaxSideSize`: Maximum allowed value for the `maxSideSize` parameter. Requests exceeding this will be capped. Defaults to `5000`.
+    - `Quality`: JPEG/WebP encoding quality (1-100). Higher values produce better quality but larger file sizes. Defaults to `80`.
 
     
 1. Register the Image Processing middleware using `app.UseXperienceCommunityImageProcessing()`:
@@ -83,6 +92,63 @@ dotnet add package XperienceCommunity.ImageProcessing
       https://yourdomain.com/getContentAsset/rest-of-your-asset-url?format=png
       ```
 
+1. Use the `fit` parameter to control how images are resized. Available modes:
+
+    - **`contain`** (default): Fit image inside dimensions, maintaining aspect ratio
+      ```
+      https://yourdomain.com/getmedia/rest-of-your-asset-url?width=500&height=500&fit=contain
+      ```
+
+    - **`cover`**: Fill dimensions exactly, cropping excess while maintaining aspect ratio
+      ```
+      https://yourdomain.com/getmedia/rest-of-your-asset-url?width=500&height=500&fit=cover
+      ```
+
+    - **`fill`**: Stretch image to exact dimensions, ignoring aspect ratio
+      ```
+      https://yourdomain.com/getmedia/rest-of-your-asset-url?width=500&height=500&fit=fill
+      ```
+
+1. Use the `crop` parameter with `fit=cover` to control crop positioning:
+
+    - **`center`** (default): Crop from center
+      ```
+      https://yourdomain.com/getmedia/rest-of-your-asset-url?width=500&height=500&fit=cover&crop=center
+      ```
+
+    - **`north`**, **`south`**, **`east`**, **`west`**: Crop from edges
+      ```
+      https://yourdomain.com/getmedia/rest-of-your-asset-url?width=500&height=500&fit=cover&crop=north
+      ```
+
+    - **`northeast`**, **`northwest`**, **`southeast`**, **`southwest`**: Crop from corners
+      ```
+      https://yourdomain.com/getmedia/rest-of-your-asset-url?width=500&height=500&fit=cover&crop=southeast
+      ```
+
+## Production Recommendations
+
+### Use a CDN
+
+**Strongly recommended:** Place a CDN (like Cloudflare, Azure CDN, or CloudFront) in front of your website for production deployments.
+
+- The middleware generates ETags for efficient browser/CDN caching
+- First request processes the image, subsequent requests are served from CDN cache
+- Dramatically reduces server load and improves performance
+- Sets `Cache-Control: public, max-age=31536000` (1 year) for optimal caching
+
+Without a CDN, every unique image variant will be processed on your server, which can be memory and CPU intensive.
+
+### Parameter Validation
+
+The middleware automatically validates and clamps dimension parameters:
+
+- `width`, `height`, and `maxSideSize` values exceeding the configured maximums are automatically capped
+- Default maximum values are 5000 pixels for all dimensions
+- Adjust `MaxWidth`, `MaxHeight`, and `MaxSideSize` in configuration based on your needs
+- Quality values outside the 1-100 range are automatically clamped
+
+This prevents abuse while ensuring requests always succeed with reasonable values.
 
 ## Contributing
 

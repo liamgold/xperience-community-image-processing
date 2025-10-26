@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using XperienceCommunity.ImageProcessing;
+using XperienceCommunity.ImageProcessing.Options;
 
 
 

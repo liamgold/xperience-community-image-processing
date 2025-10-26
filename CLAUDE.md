@@ -7,8 +7,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a **Xperience by Kentico** middleware library that provides image processing capabilities for the Xperience by Kentico platform. It's packaged as a NuGet package for distribution.
 
 **Key Technology Stack:**
-- Backend: .NET 8.0, ASP.NET Core, Xperience by Kentico 29.1.4+
-- Image Processing: SkiaSharp 2.88.8
+- Backend: .NET 8.0, ASP.NET Core, Xperience by Kentico 30.11.1+
+- Image Processing: SkiaSharp 3.119.1
 - Supported formats: WebP, JPEG, PNG
 
 ## Architecture
@@ -22,14 +22,20 @@ This project provides an ASP.NET Core middleware that intercepts image requests 
    - Intercepts requests to `/getmedia/*` (Media library) and `/getContentAsset/*` (Content hub assets)
 
 2. **Image Processing**
-   - Query parameters: `width`, `height`, `maxSideSize`, `format`
+   - Query parameters: `width`, `height`, `maxSideSize`, `format`, `fit`, `crop`
    - Supports format conversion: `webp`, `jpg`, `png`
+   - Supports fit modes: `contain` (default), `cover`, `fill`
+   - Supports crop positioning: `center` (default), `north`, `south`, `east`, `west`, `northeast`, `northwest`, `southeast`, `southwest`
    - Uses SkiaSharp for high-quality image resizing
    - ETags for client-side caching
 
 3. **Configuration Options** (`ImageProcessingOptions`)
    - `ProcessMediaLibrary`: Enable/disable processing for Media library images (default: true)
    - `ProcessContentItemAssets`: Enable/disable processing for Content hub assets (default: true)
+   - `MaxWidth`: Maximum allowed width in pixels, requests exceeding this are capped (default: 5000)
+   - `MaxHeight`: Maximum allowed height in pixels, requests exceeding this are capped (default: 5000)
+   - `MaxSideSize`: Maximum allowed maxSideSize parameter, requests exceeding this are capped (default: 5000)
+   - `Quality`: JPEG/WebP encoding quality 1-100, higher is better quality but larger file size (default: 80)
 
 ### Configuration System
 
@@ -39,7 +45,11 @@ The middleware supports optional configuration via ASP.NET Core configuration:
 {
   "ImageProcessing": {
     "ProcessMediaLibrary": true,
-    "ProcessContentItemAssets": true
+    "ProcessContentItemAssets": true,
+    "MaxWidth": 5000,
+    "MaxHeight": 5000,
+    "MaxSideSize": 5000,
+    "Quality": 80
   }
 }
 ```
@@ -77,7 +87,7 @@ This project uses **Central Package Management** via `Directory.Packages.props`:
 - All NuGet package versions are centralized in `Directory.Packages.props`
 - Individual `.csproj` files reference packages WITHOUT version attributes
 - `packages.lock.json` is generated and committed for reproducible builds
-- Kentico packages are pinned to 29.1.4
+- Kentico packages are currently at 30.11.1
 
 **Important:** When updating Kentico packages, update all three together:
 - `Kentico.Xperience.webapp`
@@ -98,16 +108,33 @@ This project uses **Central Package Management** via `Directory.Packages.props`:
 
 ### Image Processing
 - Uses SkiaSharp for high-performance image manipulation
-- `SKFilterQuality.High` for best resize quality
-- Quality setting: 80 for JPEG/WebP encoding
+- `SKSamplingOptions` with linear filtering for best resize quality
+- Configurable quality setting (default: 80) for JPEG/WebP encoding
 - Maintains aspect ratio when only width or height specified
 - `maxSideSize` parameter scales largest dimension to specified size
+- Automatic parameter validation: dimensions exceeding configured maximums are clamped
+- Proper resource disposal with try-finally pattern for bitmap memory management
+
+### Fit Modes
+- **contain** (default): Fit image inside dimensions, maintaining aspect ratio (letterbox if needed)
+- **cover**: Fill dimensions exactly, cropping excess while maintaining aspect ratio
+- **fill**: Stretch image to exact dimensions, ignoring aspect ratio
+
+### Crop Positioning
+When using `fit=cover`, the `crop` parameter controls where to crop from:
+- **center** (default): Crop from center
+- **north**: Crop from top center
+- **south**: Crop from bottom center
+- **east**: Crop from middle right
+- **west**: Crop from middle left
+- **northeast**, **northwest**, **southeast**, **southwest**: Corner positions
 
 ### Caching Strategy
-- ETags generated from MD5 hash of: original image bytes + width + height + maxSideSize + format
+- ETags generated from MD5 hash of: original image bytes + width + height + maxSideSize + format + fitMode + cropPosition
 - Clients can use If-None-Match header for cache validation
 - Cache-Control: public, max-age=31536000 (1 year)
 - Content-Disposition: inline with proper filename and extension
+- Different fit/crop combinations generate unique ETags for proper cache differentiation
 
 ## CI/CD
 
@@ -129,4 +156,5 @@ The `examples/DancingGoat` directory contains a sample Xperience by Kentico webs
 2. **SkiaSharp native dependencies:** The package includes `SkiaSharp.NativeAssets.Linux.NoDependencies` for Linux deployments
 3. **Memory usage:** Large images are loaded into memory for processing - monitor memory usage in high-traffic scenarios
 4. **ETag caching:** ETags are based on original image content, so clearing CDN/browser cache may be needed when images are updated
-5. **Query parameter validation:** Invalid values for width/height/maxSideSize are silently ignored and the original image is returned
+5. **Parameter clamping:** Dimension values exceeding configured maximums (MaxWidth, MaxHeight, MaxSideSize) are automatically capped, not rejected
+6. **Quality clamping:** Quality values outside 1-100 range are clamped to valid range
