@@ -25,7 +25,8 @@ This package provides a way to resize images and convert them to `webp`, `jpg`, 
 
 | Xperience Version | Library Version |
 | ----------------- | --------------- |
-| >= 30.11.1        | 2.0.0+          |
+| >= 31.0.0         | 3.0.0+          |
+| >= 30.11.1        | 2.x             |
 | >= 29.1.4         | 1.x             |
 
 ## Dependencies
