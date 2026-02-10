@@ -9,7 +9,7 @@
     <PackageVersion Include="Kentico.Xperience.webapp" Version="31.0.0" />
     <PackageVersion Include="Kentico.Xperience.azurestorage" Version="31.0.0" />
     <PackageVersion Include="Kentico.Xperience.admin" Version="31.0.0" />
-    <PackageVersion Include="SkiaSharp" Version="3.119.1" />
+    <PackageVersion Include="SkiaSharp" Version="3.119.2" />
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1" />
   </ItemGroup>
 </Project>
