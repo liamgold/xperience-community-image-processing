@@ -30,9 +30,9 @@
       },
       "SkiaSharp.NativeAssets.Linux.NoDependencies": {
         "type": "Direct",
-        "requested": "[3.119.1, )",
-        "resolved": "3.119.1",
-        "contentHash": "5jj6gBCe4K6TLnIERBXZfmUNE0TUyeTaF28RCxdCgIDVDaCAbHwEbk99eNYRFem/ubW/hKdvayZBOt6PaDL05g=="
+        "requested": "[3.119.2, )",
+        "resolved": "3.119.2",
+        "contentHash": "1rmveKZ8Cz7k4QJQdtKV6RFXYIEqYBiX450Bm0Bk41EE50MMPUyF81cRnASsuV0qCwdZuzjZTaFvoqS0Q2zVfA=="
       },
       "AngleSharp": {
         "type": "Transitive",
